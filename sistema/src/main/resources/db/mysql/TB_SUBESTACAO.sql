@@ -1,0 +1,7 @@
+CREATE TABLE TB_SUBESTACAO (
+  ID_SUBESTACAO int(11) NOT NULL AUTO_INCREMENT, 
+  CODIGO        varchar(3) NOT NULL UNIQUE, 
+  NOME          varchar(100), 
+  LATITUDE      decimal(15, 13) NOT NULL, 
+  LONGITUDE     decimal(15, 13), 
+  PRIMARY KEY (ID_SUBESTACAO));
