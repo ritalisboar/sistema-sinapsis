@@ -1,5 +1,7 @@
 package br.com.testejava.sistema.subestacao;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,10 @@ public class SubstationService {
 
     public SubstationService(SubstationRepository substationRepository) {
         this.substationRepository = substationRepository;
+    }
+
+    public Optional<SubstationModel> findById(Integer id_subestacao) {
+        return substationRepository.findById(id_subestacao);
     }
 
     public SubstationModel save(SubstationModel subestacao) {
