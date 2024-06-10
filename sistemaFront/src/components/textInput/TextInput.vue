@@ -6,6 +6,8 @@
       :id="id"
       :value="value"
       :disabled="disabled"
+      :maxlength="maxlength"
+      :placeholder="placeholder"
       @input="onInput"
       class="dark-input"
     />
@@ -41,6 +43,16 @@ export default defineComponent({
       required: false,
       default: false,
     },
+    maxlength: {
+      type: Number as PropType<number>,
+      required: false,
+      default: 100,
+    },
+    placeholder: {
+      type: String as PropType<string>,
+      required: false,
+      default: ''
+    }
   },
   emits: ['update:value'],
   methods: {

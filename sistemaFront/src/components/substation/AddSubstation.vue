@@ -7,6 +7,7 @@
         v-model:value="substationCode"
         label="Código:"
         :disabled="isDisabled"
+        :maxlength=3
       />
       <TextInput
         id="name-input"
@@ -19,12 +20,16 @@
         v-model:value="latitude"
         label="Latitude:"
         :disabled="isDisabledAll"
+        :maxlength=17
+        :placeholder="'Obrigatorio 17 caracteres. Ex: 12.93283748382932'"
       />
       <TextInput
         id="longitude-input"
         v-model:value="longitude"
         label="Longitude:"
         :disabled="isDisabledAll"
+        :maxlength=17
+        :placeholder="'Obrigatorio 17 caracteres. Ex: -12.9283748382932'"
       />
     </form>
   </div>
@@ -155,6 +160,7 @@ export default defineComponent({
         substationName: substationName.value,
         latitude: latitude.value,
         longitude: longitude.value,
+        redesMT: []
       };
     
       if (!substationIncluded.value.find(item => item.substationCode)){
@@ -166,9 +172,10 @@ export default defineComponent({
         redeName: redeName.value,
       };
       redesMT.value.push(newRedeMT);
-      substationIncluded.value.push(redesMT);
+      // substationIncluded.value.push(redesMT);
       
-      emit('add-rede-mt', substationIncluded.value);
+      emit('add-rede-mt', redesMT.value);
+      emit('add-substation', substationIncluded.value);
 
       redeCode.value = '';
       redeName.value = '';
