@@ -1,9 +1,11 @@
 package br.com.testejava.sistema.login;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,19 +15,22 @@ import org.springframework.web.bind.annotation.RestController;
 public class LoginController {
 
   @Autowired
+  private LoginService loginService;
+
+  @Autowired
   private LoginRepository loginRepository;
 
-  // @PostMapping("/")
-  // public ResponseEntity login(@RequestBody LoginModel loginModel) {
-  // //   var username = this.loginRepository.findByUsername(loginModel.getUsername());
-  // //   var password = this.loginRepository.findByPassword(loginModel.getPassword());
+  @GetMapping("/access")
+  public ResponseEntity<LoginModel> login(@RequestBody LoginModel loginModel) {
+    Optional<LoginModel> username = this.loginRepository.findByUsername(loginModel.getUsername());
+    Optional<LoginModel> password = this.loginRepository.findByPassword(loginModel.getPassword());
     
-  // //   // if (username!= null || password!= null) {
-  // //   //   //logica para buscar dados da tabela TB_LOGIN
-  // //   //   return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuário ou senha incorretos!");
-  // //   // } 
-
-  // //   var pageList = "page list";
-  // //   return ResponseEntity.status(HttpStatus.OK).body(pageList);
-  // }
+    if (username.isPresent()) {
+      return (ResponseEntity<LoginModel>) ResponseEntity.ok(username.get());
+    } else if (password.isPresent()) {
+      return (ResponseEntity<LoginModel>) ResponseEntity.ok(password.get());
+    } else {
+      return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    }
+  }
 }
