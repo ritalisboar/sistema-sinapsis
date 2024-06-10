@@ -13,24 +13,43 @@ O sistema conta com a navegação por 5 telas
 
 ## Requisitos
 ### Back-end
--
--
+- Java 17 ou superior
+- Maven
 
 ## Front-end
--
--
+- Node v18.16.0
+- npm
 
-## Istalação
+## Instalação
 ### Clone do repositório
--
+```
+git clone https://github.com/ritalisboar/sistema-sinapsis.git
+cd sistema-sinapsis
+```
 
 ### Back-end
--
+```
+cd sistema
+./mvnw install
+./mvnw spring-boot:run
+```
 
 ### Front-end
--
+```
+cd ../sistemaFront
+npm install
+npm run dev
+```
 
 ### Banco de dados
--
+- Foi criado um banco de dados MySQL local, acessado com base nas configurações do arquivo `application.properties`
+```
+#  MYSQL
+spring.datasource.url=jdbc:mysql://localhost:3306/sistemaDatabase
+spring.datasource.username=root
+spring.datasource.password=1234
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+```
 
-### Dependências
+### Observações
+A base url integrada no front-end foi a `http://localhost:8080`, de movo que o back-end precisa ser executado nesta porta.
