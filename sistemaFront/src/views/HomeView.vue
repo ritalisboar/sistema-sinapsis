@@ -15,6 +15,8 @@
   >
     Incluir
   </BaseButton>
+  <ModalAlert :showChoiceButton="true" :visible="modalVisible" :message="modalMessage" @close="closeModal" @accept="handleDeleteConfirm" />
+  <ModalAlert :visible="modalSuccessVisible" :message="modalSuccessMessage" @close="closeModalSuccess" />
   </div>
 </template>
 
@@ -22,6 +24,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import SubstationTable from '../components/table/SubstationTable.vue';
 import BaseButton from '../components/button/Button.vue'
+import ModalAlert from '../components/modal/ModalAlert.vue'
 import { useRouter } from 'vue-router'
 import { tagging } from '@/utils/Utils';
 import axios from 'axios'
@@ -48,15 +51,35 @@ export default defineComponent({
   components: {
     SubstationTable,
     BaseButton,
+    ModalAlert,
   },
   setup() {
     const router = useRouter()
     const substations = ref<substationType[]>([])
+    const modalVisible = ref(false);
+    const modalMessage = ref('Deseja realmente excluir o item?');
+    const modalSuccessVisible = ref(false);
+    const modalSuccessMessage = ref('');
+
+    const deleteItem = ref('')
 
     const fetchSubstationList = async () => {
       axios.get('http://localhost:8080/substation/list').then(response => {
-        console.log('AXIOS RESPONSE', response)
         substations.value = response.data
+      }).catch(err => {
+        console.log('err', err)
+      })
+    };
+
+    const deleteSubstation = async (code: string, id_substacao: number) => {
+      console.log('DELETE ID SUBSTACAO', id_substacao)
+      axios.delete(`http://localhost:8080/substation/${id_substacao}`).then(response => {
+        if (response.status === 200) {
+          modalVisible.value = false
+          substations.value = substations.value.filter(sub => sub.codigo !== code);
+          modalSuccessVisible.value = true
+          modalSuccessMessage.value = response.data
+        } 
       }).catch(err => {
         console.log('err', err)
       })
@@ -69,7 +92,15 @@ export default defineComponent({
 
     const handleDelete = (code: string) => {
       tagging("HomeView", 'handleDelete')
-      substations.value = substations.value.filter(sub => sub.codigo !== code);
+      modalVisible.value = true
+      deleteItem.value = code
+    };
+    
+    const handleDeleteConfirm = () => {
+      tagging("HomeView", 'handleDeleteConfirm')
+      console.log('DELETE -> ', deleteItem.value)
+      const id_subestacao = substations.value.find(item => item.codigo === deleteItem.value).id_subestacao
+      deleteSubstation(deleteItem.value, id_subestacao)
     };
 
     const handleEdit = (data: handleShowMapData) => {
@@ -93,12 +124,29 @@ export default defineComponent({
       router.push({ name: 'include' })
     };
 
+    const closeModal = () => {
+      tagging('HomeView', 'closeModal')
+      modalVisible.value = false;
+    };
+
+    const closeModalSuccess = () => {
+      tagging('HomeView', 'closeModalSuccess')
+      modalSuccessVisible.value = false;
+    };
+
     return {
       substations,
       handleDelete,
       handleEdit,
       handleShowMap,
       handleInclude,
+      modalVisible, 
+      modalMessage,
+      closeModal,
+      handleDeleteConfirm,
+      modalSuccessVisible,
+      modalSuccessMessage,
+      closeModalSuccess
     };
   },
 });

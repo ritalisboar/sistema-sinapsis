@@ -3,6 +3,7 @@
     <div class="modal-content">
       <span class="close" @click="close">&times;</span>
       <p>{{ message }}</p>
+      <button v-if="showChoiceButton" @click="accept">Sim</button>
       <button @click="close">Fechar</button>
     </div>
   </div>
@@ -21,10 +22,17 @@ export default {
       type: String,
       required: true,
     },
+    showChoiceButton: {
+      type: Boolean,
+      default: false
+    },
   },
   methods: {
     close() {
       this.$emit('close');
+    },
+    accept() {
+      this.$emit('accept');
     },
   },
 };
@@ -75,6 +83,7 @@ button {
   border: none;
   padding: 10px 20px;
   margin-top: 20px;
+  margin-right: 20px;
   cursor: pointer;
   border-radius: 4px;
 }
