@@ -3,6 +3,9 @@ package br.com.testejava.sistema.subestacao;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import br.com.testejava.sistema.redeMT.RedeMTModel;
 
 import jakarta.persistence.Id;
@@ -17,6 +20,7 @@ import lombok.Data;
 
 @Data
 @Entity(name = "TB_SUBESTACAO")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_subestacao")
 public class SubstationModel {
   
   @Id

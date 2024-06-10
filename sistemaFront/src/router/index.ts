@@ -24,7 +24,7 @@ const router = createRouter({
       component: IncludeView
     },
     {
-      path: '/home/alter/:code',
+      path: '/home/alter/:code&:name&:latitude&:longitude',
       name: 'alter',
       component: AlterView
     },

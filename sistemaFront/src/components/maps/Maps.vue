@@ -40,7 +40,7 @@ export default defineComponent({
     })
 
     return {
-      zoom: 11,
+      zoom: 17,
       center: coordinates,
       validateParams,
     };

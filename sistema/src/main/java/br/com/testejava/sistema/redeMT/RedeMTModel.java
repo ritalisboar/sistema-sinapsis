@@ -2,6 +2,9 @@ package br.com.testejava.sistema.redeMT;
 
 import java.math.BigDecimal;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import br.com.testejava.sistema.subestacao.SubstationModel;
 
 import jakarta.persistence.Id;
@@ -16,6 +19,7 @@ import lombok.Data;
 
 @Data
 @Entity(name = "TB_REDE_MT")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id_rede_mt")
 public class RedeMTModel {
   
   @Id

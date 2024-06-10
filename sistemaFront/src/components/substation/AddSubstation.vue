@@ -58,8 +58,8 @@
       </thead>
       <tbody>
         <tr v-for="rede in redesMT" :key="rede.redeCode">
-          <td>{{ rede.redeCode }}</td>
-          <td>{{ rede.redeName }}</td>
+          <td>{{ rede.redeCode ? rede.redeCode : rede.codigo }}</td>
+          <td>{{ rede.redeName ? rede.redeName : rede.nome }}</td>
           <td>
             <button @click="deleteRedeMT(rede.redeCode)">Excluir</button>
           </td>
@@ -91,6 +91,10 @@ export default defineComponent({
       type: String,
       default: ""
     },
+    rede: {
+      type: Array,
+      default: () => []
+    }
   },
   setup(props) {
     const { emit } = getCurrentInstance();
@@ -135,6 +139,9 @@ export default defineComponent({
     }
 
     onMounted(() => {
+      setTimeout(() => {
+        redesMT.value = props.rede.map(item => item)
+      }, 1000)
       tagging('AddSubstation', 'AddSubstationPreview')
       validateSubstationParams()
       validateCoordinatorParams()

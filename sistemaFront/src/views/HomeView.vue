@@ -24,10 +24,23 @@ import SubstationTable from '../components/table/SubstationTable.vue';
 import BaseButton from '../components/button/Button.vue'
 import { useRouter } from 'vue-router'
 import { tagging } from '@/utils/Utils';
+import axios from 'axios'
 
 type handleShowMapData = {
   code: string
   name: string
+}
+
+type substationType = {
+  codigo: string
+  nome: string
+  id_subestacao: number
+  latitude: number
+  longitude: number
+  redeMT: [{
+    codigo: string
+    nome: string
+  }]
 }
 
 export default defineComponent({
@@ -38,30 +51,40 @@ export default defineComponent({
   },
   setup() {
     const router = useRouter()
-    const substations = ref([
-      { code: '001', name: 'Subestação 1' },
-      { code: '002', name: 'Subestação 2' },
-      { code: '003', name: 'Subestação 3' },
-    ]);
+    const substations = ref<substationType[]>([])
 
+    const fetchSubstationList = async () => {
+      axios.get('http://localhost:8080/substation/list').then(response => {
+        console.log('AXIOS RESPONSE', response)
+        substations.value = response.data
+      }).catch(err => {
+        console.log('err', err)
+      })
+    };
+  
     onMounted(() => {
+      fetchSubstationList();
       tagging("HomeView", 'showHomeView')
     })
 
     const handleDelete = (code: string) => {
       tagging("HomeView", 'handleDelete')
-      substations.value = substations.value.filter(sub => sub.code !== code);
+      substations.value = substations.value.filter(sub => sub.codigo !== code);
     };
 
-    const handleEdit = (code: string) => {
+    const handleEdit = (data: handleShowMapData) => {
       tagging("HomeView", 'handleEdit')
-      router.push({ name: 'alter', params: { code } })
+      const sub = substations.value.find(item => item.codigo === data.code)
+      const latitude = sub?.latitude
+      const longitude = sub?.longitude
+      router.push({ name: 'alter', params: { code: data.code, name: data.name, latitude, longitude } })
     };
 
     const handleShowMap = (data: handleShowMapData) => {
       tagging("HomeView", 'handleShowMap')
-      const latitude = '-11.0060078'
-      const longitude = '-37.1013934'
+      const sub = substations.value.find(item => item.codigo === data.code)
+      const latitude = sub?.latitude
+      const longitude = sub?.longitude
       router.push({ name: 'preview', params: { code: data.code, name: data.name, latitude, longitude } })
     };
 
